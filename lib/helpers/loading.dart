@@ -5,7 +5,7 @@ import 'package:trip_manager/constants.dart';
 class Loader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SpinKitChasingDots(
+    return SpinKitThreeBounce(
       color: kBlackColor,
     );
   }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_manager/widgets/homepage/notaskadded.dart';
@@ -13,6 +14,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final user = Provider.of<User>(context);
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -53,23 +55,30 @@ class HomePage extends StatelessWidget {
             ),
           ),
           SliverToBoxAdapter(
-            child: FutureBuilder<List<Trip>>(
-              future: Database().getUserTrips(user.userId),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: Firestore.instance
+                  .collection('trips')
+                  .document(user.userId)
+                  .collection('usertrips')
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Loader();
-                } else if (!snapshot.hasData) {
-                  return NoTasksAdded();
                 }
-                final trips = snapshot.data;
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return TripCard();
-                    },
-                    childCount: trips.length,
-                  ),
-                );
+
+                var trips = snapshot.data.documents;
+                return trips.length == 0
+                    ? NoTasksAdded()
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        itemCount: trips.length,
+                        itemBuilder: (context, index) {
+                          return TripCard(
+                            trip: trips[index],
+                          );
+                        },
+                      );
               },
             ),
           ),

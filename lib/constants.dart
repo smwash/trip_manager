@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const kAccentColor = Color(0xffeca836);
-const kTripCardColor = Color(0xffe9ecee);
+const kTripCardColor = Color(0xffe4ebf5);
 const kBlackColor = Color(0xff454140);
 
 const kTextFieldDecoration = InputDecoration(
@@ -36,6 +36,11 @@ const kAddTripTextFieldDeco = InputDecoration(
     fontWeight: FontWeight.w800,
   ),
   border: UnderlineInputBorder(
+    borderSide: BorderSide(
+      color: Colors.black,
+    ),
+  ),
+  enabledBorder: UnderlineInputBorder(
     borderSide: BorderSide(
       color: Colors.black,
     ),

@@ -7,6 +7,7 @@ import 'package:trip_manager/services/authService.dart';
 import './screens/authscreen.dart';
 import './screens/homescreen.dart';
 import './widgets/bottomnav.dart';
+import 'services/database.dart';
 
 void main() {
   runApp(MyApp());

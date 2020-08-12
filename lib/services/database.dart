@@ -24,15 +24,21 @@ class Database {
 
   //create user trip:
   Future addTrip(Trip trip) async {
-    return _db.collection('trips').document(trip.tripId).setData(trip.toMap());
+    return _db
+        .collection('trips')
+        .document(trip.tripId)
+        .collection('usertrips')
+        .add(trip.toMap());
   }
 
-  Future<List<Trip>> getUserTrips(String userId) async {
-    return await _db
-        .collection('trips')
-        .document(userId)
-        .snapshots()
-        .map((document) => Trip.fromFirestore(document.data))
-        .toList();
-  }
+  // Stream<List<Trip>> getUserTrips(String userID) {
+  //   return _db
+  //       .collection('trips')
+  //       .document(userID)
+  //       .collection('usertrips')
+  //       .snapshots()
+  //       .map((query) => query.documents
+  //           .map((snapshot) => Trip.fromFirestore(snapshot.data))
+  //           .toList());
+  // }
 }

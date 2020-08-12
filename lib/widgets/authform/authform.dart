@@ -5,6 +5,7 @@ import 'package:trip_manager/helpers/loading.dart';
 import 'package:trip_manager/helpers/validators.dart';
 import 'package:trip_manager/services/authService.dart';
 
+import '../circleButton.dart';
 import 'authbutton.dart';
 import 'textfields.dart';
 
@@ -179,7 +180,9 @@ class _AuthFormState extends State<AuthForm> {
                       height: size.width * 0.015,
                     ),
                     CircularButton(
-                      size: size,
+                      icon: MdiIcons.google,
+                      borderColor: kBlackColor,
+                      iconColor: kAccentColor,
                       onTap: () {
                         AuthService().googleSignIn();
                       },
@@ -188,42 +191,6 @@ class _AuthFormState extends State<AuthForm> {
                 ),
               ),
             ),
-    );
-  }
-}
-
-class CircularButton extends StatelessWidget {
-  const CircularButton({
-    Key key,
-    @required this.size,
-    this.onTap,
-  }) : super(key: key);
-
-  final Size size;
-  final Function onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-        padding: EdgeInsets.all(
-          size.height * 0.007,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: kBlackColor,
-            width: 2,
-          ),
-        ),
-        child: Icon(
-          MdiIcons.google,
-          color: kAccentColor,
-          size: size.height * 0.04,
-        ),
-      ),
-      onTap: onTap,
     );
   }
 }
