@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class Trip {
   final String title;
   final String tripId;
-  final double budget;
+  final int budget;
+  final Color tripColor;
   final String tripType;
   final String location;
   final Timestamp timestamp;
@@ -19,6 +20,7 @@ class Trip {
     this.location,
     this.tripType,
     this.timestamp,
+    this.tripColor,
     this.endTripDate,
     this.startTripDate,
     this.tripDescription,
@@ -32,6 +34,7 @@ class Trip {
       'location': location,
       'tripType': tripType,
       'timestamp': timestamp,
+      'tripColor': tripColor.value,
       'endTripDate': endTripDate,
       'startTripDate': startTripDate,
       'tripDescription': tripDescription,

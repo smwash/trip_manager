@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_manager/constants.dart';
@@ -20,11 +22,12 @@ class _AddTripScreenState extends State<AddTripScreen> {
   String _budget;
   String _tripType;
   String _location;
+  Color _taskColor;
   String _tripTitle;
   String _description;
   DateTime _endTripdate;
   DateTime _startTripDate;
-  DateTimeRange _datePicked;
+  //DateTimeRange _datePicked;
   String _currentType = 'Car';
 
   Future _handleShowCalendar() async {
@@ -37,9 +40,8 @@ class _AddTripScreenState extends State<AddTripScreen> {
       );
       if (datesPicked != null) {
         setState(() {
-          _startTripDate = _datePicked.start;
-          _endTripdate = _datePicked.end;
-          _datePicked = datesPicked;
+          _startTripDate = datesPicked.start;
+          _endTripdate = datesPicked.end;
         });
       }
       if (datesPicked == null) {
@@ -64,9 +66,10 @@ class _AddTripScreenState extends State<AddTripScreen> {
           title: _tripTitle,
           tripId: user.userId,
           location: _location,
+          tripColor: _taskColor,
           tripType: _tripType ?? 'car',
           timestamp: Timestamp.now(),
-          budget: double.parse(_budget),
+          budget: int.parse(_budget),
           tripDescription: _description ?? '',
           endTripDate: _endTripdate ?? DateTime.now(),
           startTripDate: _startTripDate ?? DateTime.now(),
@@ -222,8 +225,10 @@ class _AddTripScreenState extends State<AddTripScreen> {
                                   onPressed: _handleShowCalendar,
                                 ),
                               ),
-                              hintText: _datePicked != null
-                                  ? _startTripDate
+                              hintText: _startTripDate != null
+                                  ? DateFormat()
+                                      .add_yMMMd()
+                                      .format(_startTripDate)
                                   : 'Pick Date',
                               hintStyle: TextStyle(
                                 fontWeight: FontWeight.w500,
@@ -251,7 +256,11 @@ class _AddTripScreenState extends State<AddTripScreen> {
                           child: TextFormField(
                             readOnly: true,
                             decoration: InputDecoration(
-                              hintText: _datePicked != null ? _endTripdate : '',
+                              hintText: _endTripdate != null
+                                  ? DateFormat()
+                                      .add_yMMMd()
+                                      .format(_endTripdate)
+                                  : '',
                             ),
                           ),
                         ),
@@ -316,7 +325,42 @@ class _AddTripScreenState extends State<AddTripScreen> {
                       ),
                       onSaved: (value) => _description = value,
                     ),
-                    SizedBox(height: size.height * 0.03),
+                    SizedBox(height: size.height * 0.015),
+                    Row(
+                      children: [
+                        Text(
+                          'Pick Trip Color:',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Spacer(),
+                        CircleAvatar(
+                          backgroundColor: _taskColor,
+                        ),
+                        SizedBox(width: size.width * 0.03),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2,
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            icon: Icon(
+                              MdiIcons.palette,
+                              color: Colors.black,
+                            ),
+                            onPressed: _showColorPicker,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: size.height * 0.015),
                     GestureDetector(
                       child: Container(
                         width: double.infinity,
@@ -353,6 +397,35 @@ class _AddTripScreenState extends State<AddTripScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future _showColorPicker() async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Pick Favorite Color'),
+          content: MaterialColorPicker(
+            selectedColor: _taskColor,
+            allowShades: false,
+            onMainColorChange: (color) {
+              setState(() => _taskColor = color);
+            },
+          ),
+          actions: [
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () => Navigator.pop(context, false),
+            ),
+            FlatButton(
+              child: Text('Submit'),
+              onPressed: () => Navigator.pop(context, true),
+            ),
+          ],
+        );
+      },
     );
   }
 }
