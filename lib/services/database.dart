@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:trip_manager/models/trip.dart';
 import 'package:trip_manager/models/user.dart';
 
@@ -23,12 +24,40 @@ class Database {
   }
 
   //create user trip:
-  Future addTrip(Trip trip) async {
-    return _db
+  Future addTrip({
+    @required Trip trip,
+    @required String userId,
+  }) async {
+    return await _db
         .collection('trips')
-        .document(trip.tripId)
+        .document(userId)
         .collection('usertrips')
-        .add(trip.toMap());
+        .document(trip.tripId)
+        .setData(trip.toMap());
+  }
+
+  Future updateTrip({
+    @required String userId,
+    @required Trip trip,
+  }) async {
+    return await _db
+        .collection('trips')
+        .document(userId)
+        .collection('usertrips')
+        .document(trip.tripId)
+        .updateData(trip.toMap());
+  }
+
+  Future deleteTrip({
+    @required String userId,
+    @required String tripId,
+  }) async {
+    return await _db
+        .collection('trips')
+        .document(userId)
+        .collection('usertrips')
+        .document(tripId)
+        .delete();
   }
 
   // Stream<List<Trip>> getUserTrips(String userID) {

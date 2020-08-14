@@ -35,6 +35,7 @@ dependencies:
   material_design_icons_flutter: ^4.0.5345
   intl: ^0.16.1
   flutter_material_color_picker: ^1.0.5
+  uuid: ^2.2.0
 
 dev_dependencies:
   flutter_test:

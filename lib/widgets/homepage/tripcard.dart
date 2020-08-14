@@ -9,19 +9,32 @@ import 'package:trip_manager/screens/tripdetail.dart';
 
 import 'triprichtext.dart';
 
-class TripCard extends StatelessWidget {
+class TripCard extends StatefulWidget {
   final DocumentSnapshot trip;
 
   const TripCard({Key key, this.trip}) : super(key: key);
+
+  @override
+  _TripCardState createState() => _TripCardState();
+}
+
+class _TripCardState extends State<TripCard> {
   @override
   Widget build(BuildContext context) {
+    int _dueTime;
     Size size = MediaQuery.of(context).size;
     DateTime startDate = DateTime.parse(
-      trip['startTripDate'].toDate().toString(),
+      widget.trip['startTripDate'].toDate().toString(),
     );
     DateTime endDate = DateTime.parse(
-      trip['endTripDate'].toDate().toString(),
+      widget.trip['endTripDate'].toDate().toString(),
     );
+    _dueTime = endDate.difference(startDate).inDays;
+    if (_dueTime == 0) {
+      setState(() {
+        _dueTime = endDate.difference(startDate).inHours;
+      });
+    }
 
     return Container(
       padding: EdgeInsets.only(
@@ -40,14 +53,14 @@ class TripCard extends StatelessWidget {
           Container(
               height: size.height * 0.007,
               width: double.infinity,
-              color: Color(trip['tripColor'])),
+              color: Color(widget.trip['tripColor'])),
           SizedBox(height: size.height * 0.015),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TripsRichText(
                 titleLabel: 'Trip Title:  ',
-                titleDescription: trip['title'],
+                titleDescription: widget.trip['title'],
               ),
               Container(
                 decoration: BoxDecoration(
@@ -61,27 +74,25 @@ class TripCard extends StatelessWidget {
                 child: IconButton(
                   icon: Icon(
                     MdiIcons.fileDocumentEdit,
-                    color: Color(trip['tripColor']),
+                    color: Color(widget.trip['tripColor']),
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       BouncyPageRoute(
                         page: TripDetail(
-                          trip: trip,
+                          trip: widget.trip,
                         ),
                       ),
                     );
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => TripDetail(trip: trip),
-                    //   ),
-                    // );
                   },
                 ),
               ),
             ],
+          ),
+          TripsRichText(
+            titleLabel: 'Due In:  ',
+            titleDescription: '$_dueTime days',
           ),
           SizedBox(height: size.height * 0.012),
           Row(
@@ -103,22 +114,22 @@ class TripCard extends StatelessWidget {
           TripsRichText(
             titleLabel: 'Budget:  ',
             titleDescription:
-                'Ksh.${NumberFormat('#,###', 'en_US').format(trip['budget'])}',
+                'Ksh.${NumberFormat('#,###', 'en_US').format(widget.trip['budget'])}',
           ),
           SizedBox(height: size.height * 0.004),
           TripsRichText(
             titleLabel: 'Location:  ',
-            titleDescription: trip['location'],
+            titleDescription: widget.trip['location'],
           ),
           SizedBox(height: size.height * 0.004),
           TripsRichText(
             titleLabel: 'Form of transport:  ',
-            titleDescription: trip['tripType'],
+            titleDescription: widget.trip['tripType'],
           ),
           SizedBox(height: size.height * 0.004),
           TripsRichText(
             titleLabel: 'Description:  ',
-            titleDescription: trip['tripDescription'],
+            titleDescription: widget.trip['tripDescription'],
           ),
         ],
       ),

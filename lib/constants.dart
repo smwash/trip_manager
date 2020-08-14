@@ -51,3 +51,27 @@ const kAddTripTextFieldDeco = InputDecoration(
     ),
   ),
 );
+
+const kTripDetailField = InputDecoration(
+  border: UnderlineInputBorder(
+    borderSide: BorderSide(
+      color: Colors.black,
+    ),
+  ),
+  enabledBorder: UnderlineInputBorder(
+    borderSide: BorderSide(
+      color: Colors.black,
+    ),
+  ),
+  focusedBorder: UnderlineInputBorder(
+    borderSide: BorderSide(
+      color: Colors.black,
+    ),
+  ),
+);
+
+const kTitleTextStyle = TextStyle(
+  fontSize: 18.0,
+  color: Colors.black,
+  fontWeight: FontWeight.w700,
+);

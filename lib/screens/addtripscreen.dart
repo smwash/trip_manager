@@ -11,6 +11,7 @@ import 'package:trip_manager/models/trip.dart';
 import 'package:trip_manager/models/user.dart';
 import 'package:trip_manager/services/database.dart';
 import 'package:trip_manager/widgets/circleButton.dart';
+import 'package:uuid/uuid.dart';
 
 class AddTripScreen extends StatefulWidget {
   @override
@@ -19,8 +20,9 @@ class AddTripScreen extends StatefulWidget {
 
 class _AddTripScreenState extends State<AddTripScreen> {
   final _formKey = GlobalKey<FormState>();
+  var uuid = Uuid();
   String _budget;
-  String _tripType;
+
   String _location;
   Color _taskColor;
   String _tripTitle;
@@ -63,18 +65,19 @@ class _AddTripScreenState extends State<AddTripScreen> {
       if (isValid) {
         _formKey.currentState.save();
         var trip = Trip(
+          tripId: uuid.v4(),
+          isFavorite: false,
           title: _tripTitle,
-          tripId: user.userId,
           location: _location,
           tripColor: _taskColor,
-          tripType: _tripType ?? 'car',
+          tripType: _currentType,
           timestamp: Timestamp.now(),
           budget: int.parse(_budget),
           tripDescription: _description ?? '',
           endTripDate: _endTripdate ?? DateTime.now(),
           startTripDate: _startTripDate ?? DateTime.now(),
         );
-        await _db.addTrip(trip);
+        await _db.addTrip(trip: trip, userId: user.userId);
         print('Added to firebase');
         Navigator.pop(context);
       } else if (!isValid) return null;
@@ -162,13 +165,12 @@ class _AddTripScreenState extends State<AddTripScreen> {
                         ),
                         Expanded(
                           child: DropdownButtonFormField(
+                            value: _currentType,
                             style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.black,
                               fontWeight: FontWeight.w500,
                             ),
-                            decoration: InputDecoration(),
-                            value: _currentType,
                             items: tripType.map(
                               (type) {
                                 return DropdownMenuItem(
@@ -177,9 +179,14 @@ class _AddTripScreenState extends State<AddTripScreen> {
                                 );
                               },
                             ).toList(),
-                            onChanged: (value) => setState(
-                              () => _currentType = value,
-                            ),
+                            onSaved: (value) {
+                              _currentType = value;
+                            },
+                            onChanged: (value) {
+                              setState(() {
+                                _currentType = value;
+                              });
+                            },
                           ),
                         ),
                       ],

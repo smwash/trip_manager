@@ -2,16 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Trip {
+  bool isFavorite;
+  final int budget;
   final String title;
   final String tripId;
-  final int budget;
   final Color tripColor;
   final String tripType;
   final String location;
   final Timestamp timestamp;
+  final DateTime endTripDate;
   final String tripDescription;
   final DateTime startTripDate;
-  final DateTime endTripDate;
 
   Trip({
     this.title,
@@ -24,6 +25,7 @@ class Trip {
     this.endTripDate,
     this.startTripDate,
     this.tripDescription,
+    this.isFavorite = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -34,10 +36,15 @@ class Trip {
       'location': location,
       'tripType': tripType,
       'timestamp': timestamp,
-      'tripColor': tripColor.value,
+      'isFavorite': isFavorite,
       'endTripDate': endTripDate,
+      'tripColor': tripColor.value,
       'startTripDate': startTripDate,
       'tripDescription': tripDescription,
     };
+  }
+
+  void toggleFavorite() {
+    isFavorite = !isFavorite;
   }
 }

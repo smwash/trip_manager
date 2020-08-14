@@ -26,7 +26,7 @@ class BouncyPageRoute extends PageRouteBuilder {
 
   BouncyPageRoute({this.page})
       : super(
-            transitionDuration: Duration(seconds: 2),
+            transitionDuration: Duration(seconds: 1),
             transitionsBuilder: (BuildContext context,
                 Animation<double> animation,
                 Animation<double> secAnimation,
