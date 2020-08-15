@@ -11,42 +11,44 @@ import './widgets/bottomnav.dart';
 import 'services/database.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding();
+  runApp(
+    //WidgetsFlutterBinding(),
+
+    MultiProvider(providers: [
+      ChangeNotifierProvider<ThemeProvider>(
+        create: (context) => ThemeProvider(
+          ThemeData.dark(),
+        ),
+      ),
+      StreamProvider<User>.value(
+        value: AuthService().user,
+      ),
+    ], child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<ThemeProvider>(
-          create: (context) => ThemeProvider(
-            ThemeData.dark(),
-          ),
-        ),
-        StreamProvider<User>.value(
-          value: AuthService().user,
-        ),
-      ],
-      child: MaterialApp(
-        title: 'Trip Mangaer',
-        theme: ThemeData(
-          fontFamily: 'Mulish',
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        debugShowCheckedModeBanner: false,
-        home: StreamBuilder(
-          stream: FirebaseAuth.instance.onAuthStateChanged,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Loader();
-            } else if (snapshot.hasData) {
-              return BottomNav();
-            }
-            return AuthScreen();
-          },
-        ),
+    return MaterialApp(
+      title: 'Trip Mangaer',
+      theme: ThemeData(
+        fontFamily: 'Mulish',
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      debugShowCheckedModeBanner: false,
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.onAuthStateChanged,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Loader();
+          } else if (snapshot.hasData) {
+            return BottomNav();
+          }
+          return AuthScreen();
+        },
       ),
     );
   }
