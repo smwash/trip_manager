@@ -15,12 +15,19 @@ class Database {
   }
 
   //fetcuserdata:
-  Future<User> getUserData(String userId) async {
-    return await _db
+  Stream<User> getUserData(String userId) {
+    return _db
         .collection('users')
         .document(userId)
-        .get()
-        .then((document) => User.fromFirestore(document.data));
+        .snapshots()
+        .map((document) => User.fromFirestore(document.data));
+  }
+
+  Future updateUserData(User user) async {
+    return await _db
+        .collection('users')
+        .document(user.userId)
+        .updateData(user.toMap());
   }
 
   //create user trip:
@@ -59,15 +66,4 @@ class Database {
         .document(tripId)
         .delete();
   }
-
-  // Stream<List<Trip>> getUserTrips(String userID) {
-  //   return _db
-  //       .collection('trips')
-  //       .document(userID)
-  //       .collection('usertrips')
-  //       .snapshots()
-  //       .map((query) => query.documents
-  //           .map((snapshot) => Trip.fromFirestore(snapshot.data))
-  //           .toList());
-  // }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trip_manager/helpers/loading.dart';
 import 'package:trip_manager/models/user.dart';
+import 'package:trip_manager/providers/themechanger.dart';
 import 'package:trip_manager/services/authService.dart';
 import './screens/authscreen.dart';
 import './screens/homescreen.dart';
@@ -19,6 +20,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider(
+            ThemeData.dark(),
+          ),
+        ),
         StreamProvider<User>.value(
           value: AuthService().user,
         ),

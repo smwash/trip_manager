@@ -50,4 +50,11 @@ class Validator {
     }
     return null;
   }
+
+  String profileNameValidator(String value) {
+    if (value.isEmpty) {
+      return 'Username is required';
+    }
+    return null;
+  }
 }
